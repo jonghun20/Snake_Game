@@ -43,11 +43,12 @@ class Snake(Gfx):
         self.head.speed(10)
 
         self.body = []
-        self.new_body = Turtle()
-        self.new_body.speed(0)
-        self.new_body.shape("square")
-        self.new_body.color("green")
-        self.new_body.penup()
+        # self.create_new_body()
+        # self.new_body = Turtle()
+        # self.new_body.speed(0)
+        # self.new_body.shape("square")
+        # self.new_body.color("green")
+        # self.new_body.penup()
 
         # Apple appears in a random place when snake is near
     def detectFood(self):
@@ -55,7 +56,26 @@ class Snake(Gfx):
             x = random.randint(-280, 280)
             y = random.randint(-280, 280)
             self.food_obj.food.goto(x, y)
+            self.create_new_body()
             self.body.append(self.new_body)
+
+    def create_new_body(self):
+        self.new_body = Turtle()
+        self.new_body.speed(0)
+        self.new_body.shape("square")
+        self.new_body.color("green")
+        self.new_body.penup()
+
+    def checkBody(self):
+        for index in range(len(self.body) - 1, 0, -1):
+            x = self.body[index - 1].xcor()
+            y = self.body[index - 1].ycor()
+            self.body[index].goto(x, y)
+
+        if len(self.body) > 0:
+            x = self.head.xcor()
+            y = self.head.ycor()
+            self.body[0].goto(x, y)
 
     def moveUp(self):
         while True:
@@ -63,6 +83,7 @@ class Snake(Gfx):
             y = self.head.ycor()
             self.head.sety(y + 20)
             time.sleep(0.1)
+            self.checkBody()
             self.end()
 
     def moveDown(self):
@@ -71,6 +92,7 @@ class Snake(Gfx):
             y = self.head.ycor()
             self.head.sety(y - 20)
             time.sleep(0.1)
+            self.checkBody()
             self.end()
 
     def moveRight(self):
@@ -79,6 +101,7 @@ class Snake(Gfx):
             x = self.head.xcor()
             self.head.setx(x + 20)
             time.sleep(0.1)
+            self.checkBody()
             self.end()
 
     def moveLeft(self):
@@ -87,6 +110,7 @@ class Snake(Gfx):
             x = self.head.xcor()
             self.head.setx(x - 20)
             time.sleep(0.1)
+            self.checkBody()
             self.end()
 
     def keyboardPress(self):
