@@ -2,6 +2,10 @@ from turtle import Turtle, Screen
 import time
 import random
 
+# snake can't go in reverse
+# body doesn't disappear
+# stop when starting over
+
 class Gfx:
     def __init__(self):
         self.window = Screen()
@@ -41,6 +45,7 @@ class Snake(Gfx):
         self.keyboardPress()
         self.food_obj = Food()
         self.head.speed(10)
+        self.head.direction = "stop"
 
         self.body = []
         # self.create_new_body()
@@ -71,11 +76,38 @@ class Snake(Gfx):
             x = self.body[index - 1].xcor()
             y = self.body[index - 1].ycor()
             self.body[index].goto(x, y)
+            # if self.head.distance(self.body[index]) < 20:
+            #     self.end
 
         if len(self.body) > 0:
             x = self.head.xcor()
             y = self.head.ycor()
             self.body[0].goto(x, y)
+
+    def collision(self):
+        for part in self.body:
+            if part.distance(self.head) < 20:
+                self.head.goto(0,0)
+                self.head.direction = "Stop"
+
+                for part in self.body:
+                    part.hideturtle()
+
+                self.body.clear()
+
+            # for index in range(len(self.body) - 1, 0, -1):
+            #     if self.head.distance(self.body[index]) < 20:
+            #         del self.body
+            #         del self.new_body
+            #         self.body.clear()
+            #         self.startOver()
+
+
+    # if head meets the body after 4th one
+    # self.head position, self.body position
+    # insert 0
+    # len == 0
+    # del
 
     def moveUp(self):
         while True:
@@ -111,6 +143,7 @@ class Snake(Gfx):
             self.head.setx(x - 20)
             time.sleep(0.1)
             self.checkBody()
+
             self.end()
 
     def keyboardPress(self):
@@ -123,10 +156,18 @@ class Snake(Gfx):
         self.head.hideturtle()
         self.head.home()
         self.head.showturtle()
+        self.head.pos(0,0) # stay
 
     def end(self):
         if self.head.xcor() > 290 or self.head.xcor() < -290 or self.head.ycor() > 290 or self.head.ycor() < -290:
             return self.startOver()
+            #
+            # if len(self.body) >= 2:
+            #     del self.body[0:]
+
+
+
+
 
     # def food(self):
     #     self.food = Turtle()
